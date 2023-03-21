@@ -2,13 +2,9 @@ package com.example.nailssamarabot.service;
 
 import com.example.nailssamarabot.config.BotConfig;
 import com.example.nailssamarabot.controller.BookingController;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -51,10 +47,16 @@ public class Bot extends TelegramLongPollingBot implements BotCommands {
             Long chatId = update.getMessage().getChatId();
             String clientName = update.getMessage().getChat().getFirstName();
 
-
             switch (message) {
                 case "/start":
+                    bookingController.registerClient(update);
                     startBotCommand(chatId, clientName);
+                    break;
+                case "/help":
+
+                    break;
+                case "/cancel":
+
                     break;
             }
         }
@@ -73,11 +75,13 @@ public class Bot extends TelegramLongPollingBot implements BotCommands {
         sendMessage.setText(message);
 
         try {
+
             execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public String getBotUsername() {
